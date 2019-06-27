@@ -5,6 +5,7 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = (event, context, callback) => {
   console.log('Received event:', JSON.stringify(event, null, 2));
+  event = JSON.parse(event.body);
   var constraints = {
     email: {
       presence: true,

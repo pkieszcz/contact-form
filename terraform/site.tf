@@ -35,6 +35,6 @@ resource "aws_s3_bucket_object" "index" {
   bucket       = "${aws_s3_bucket.contact-form.id}"
   key          = "index.html"
   content_type = "text/html"
-  source       = "../src/index.html"
-  etag         = "${md5(file("../src/index.html"))}"
+  source       = "../src/static-site/index.html"
+  etag         = "${md5(file("../src/static-site/index.html"))}"
 }

@@ -1,7 +1,7 @@
 data "archive_file" "contact-form" {
   type        = "zip"
-  source_dir  = "../src/"
-  output_path = "../index.zip"
+  source_dir  = "../src/dynamodb"
+  output_path = "../dynamodb.zip"
 }
 
 data "template_file" "contact-form" {

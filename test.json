@@ -1,7 +1,5 @@
-[
-  {
-    "name": "pioter",
-    "email": "pioter@test.pl",
-    "message": "test"
-  }
-]
+{
+  "name": "pioterapi",
+  "email": "pioter@taaaaaest.pl",
+  "message": "api"
+}

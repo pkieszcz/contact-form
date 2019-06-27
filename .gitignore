@@ -1,3 +1,5 @@
 node_modules
 .terraform
-index.zip
+*.zip
+terraform.tfstate
+terraform.tfstate*
