@@ -38,7 +38,15 @@ resource "aws_api_gateway_method" "contact-form" {
   api_key_required = false
 }
 
-resource "aws_api_gateway_method_response" "contact-form-sucess" {
+resource "aws_api_gateway_method" "contact-form-options" {
+  rest_api_id      = "${aws_api_gateway_rest_api.contact-form.id}"
+  resource_id      = "${aws_api_gateway_resource.contact-form.id}"
+  http_method      = "OPTIONS"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_method_response" "contact-form" {
   rest_api_id = "${aws_api_gateway_rest_api.contact-form.id}"
   resource_id = "${aws_api_gateway_resource.contact-form.id}"
   http_method = "${aws_api_gateway_method.contact-form.http_method}"
@@ -46,6 +54,23 @@ resource "aws_api_gateway_method_response" "contact-form-sucess" {
 
   response_models = {
     "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_method_response" "contact-form-options" {
+  rest_api_id = "${aws_api_gateway_rest_api.contact-form.id}"
+  resource_id = "${aws_api_gateway_resource.contact-form.id}"
+  http_method = "${aws_api_gateway_method.contact-form-options.http_method}"
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
   }
 }
 
@@ -58,14 +83,39 @@ resource "aws_api_gateway_integration" "contact-form" {
   integration_http_method = "POST"
 }
 
+resource "aws_api_gateway_integration" "contact-form-options" {
+  rest_api_id = "${aws_api_gateway_rest_api.contact-form.id}"
+  resource_id = "${aws_api_gateway_resource.contact-form.id}"
+  http_method = "${aws_api_gateway_method.contact-form-options.http_method}"
+  type        = "MOCK"
+}
+
 resource "aws_api_gateway_integration_response" "contact-form" {
   rest_api_id = "${aws_api_gateway_rest_api.contact-form.id}"
   resource_id = "${aws_api_gateway_resource.contact-form.id}"
   http_method = "${aws_api_gateway_method.contact-form.http_method}"
-  status_code = "${aws_api_gateway_method_response.contact-form-sucess.status_code}"
+  status_code = "${aws_api_gateway_method_response.contact-form.status_code}"
   depends_on  = ["aws_api_gateway_integration.contact-form"]
 
   response_templates = {
     "application/json" = ""
+  }
+}
+
+resource "aws_api_gateway_integration_response" "contact-form-options" {
+  rest_api_id = "${aws_api_gateway_rest_api.contact-form.id}"
+  resource_id = "${aws_api_gateway_resource.contact-form.id}"
+  http_method = "${aws_api_gateway_method.contact-form-options.http_method}"
+  status_code = "${aws_api_gateway_method_response.contact-form-options.status_code}"
+  depends_on  = ["aws_api_gateway_integration.contact-form-options"]
+
+  response_templates = {
+    "application/json" = ""
+  }
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }

@@ -62,6 +62,27 @@ data "aws_iam_policy_document" "contact-form" {
 
     resources = ["*"]
   }
+
+  statement {
+    sid = "SpecificTableDynamoDb"
+
+    actions = [
+      "dynamodb:BatchGet*",
+      "dynamodb:DescribeStream",
+      "dynamodb:DescribeTable",
+      "dynamodb:Get*",
+      "dynamodb:Query",
+      "dynamodb:Scan",
+      "dynamodb:BatchWrite*",
+      "dynamodb:CreateTable",
+      "dynamodb:Delete*",
+      "dynamodb:Update*",
+      "dynamodb:PutItem",
+    ]
+
+    effect    = "Allow"
+    resources = ["${aws_dynamodb_table.contact-form.arn}"]
+  }
 }
 
 resource "aws_iam_policy_attachment" "contact-form" {

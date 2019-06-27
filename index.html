@@ -1,23 +1,49 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#submit").click(function(e) {
+                e.preventDefault();
+
+                var name = $("#name").val(),
+                    email = $("#email").val(),
+                    message = $("#message").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: 'https://97sqvinbd3.execute-api.eu-central-1.amazonaws.com/contact-form-dev/contact',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'name': name,
+                        'email': email,
+                        'message': message
+                    }),
+                    success: function(res){
+                        $('#form-response').text('Email was sent.');
+                    },
+                    error: function(){
+                        $('#form-response').text('Error.');
+                    }
+                });
+
+            })
+
+        });
+    </script>
 </head>
-
 <body>
-    <form id="form">
-        <label>Name</label>
-        <input type="text" placeholder="Name" name="name" required>
-        <br>
-        <label>Email Address</label>
-        <input type="email" placeholder="Email Address" name="email" required>
-        <br>
-        <label>Message</label>
-        <textarea rows="5" placeholder="Message" name="content" required></textarea>
-        <div id="toast"></div>
-        <button type="submit" id="submit">Send</button>
-    </form>
+<form>
+    <label for="name">Name</label>
+    <input id="name">
+    <label for="email">Email</label>
+    <input id="email">
+    <label for="message">Message</label>
+    <textarea id="message"></textarea>
+    <button id="submit">Submit</button>
+</form>
+<div id="form-response"></div>
 </body>
-
 </html>
