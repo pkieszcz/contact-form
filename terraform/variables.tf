@@ -1,5 +1,5 @@
 variable "aws_profile" {
-  default = "aws-nordcloud-piotr-kieszczynski"
+  default = "aws-piotr-kieszczynski"
 }
 
 variable "aws_region" {
