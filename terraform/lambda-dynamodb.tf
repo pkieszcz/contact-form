@@ -9,12 +9,14 @@ data "template_file" "contact-form" {
 }
 
 resource "aws_lambda_function" "contact-form" {
-  function_name = "${data.template_file.contact-form.rendered}"
-  filename      = "${data.archive_file.contact-form.output_path}"
-  runtime       = "nodejs8.10"
-  role          = "${aws_iam_role.contact-form.arn}"
-  handler       = "index.handler"
-  timeout       = 10
+  function_name    = "${data.template_file.contact-form.rendered}"
+  filename         = "${data.archive_file.contact-form.output_path}"
+  source_code_hash = "${data.archive_file.contact-form.output_base64sha256}"
+  publish          = true
+  runtime          = "nodejs8.10"
+  role             = "${aws_iam_role.contact-form.arn}"
+  handler          = "index.handler"
+  timeout          = 10
 
   environment {
     variables = {
@@ -45,7 +47,7 @@ data "aws_iam_policy_document" "contact-form-assume-role" {
 
 resource "aws_iam_policy" "contact-form" {
   name        = "${aws_lambda_function.contact-form.function_name}"
-  description = "basic cloudwatch logging permissions"
+  description = "Permissions for dynamodb insert lambda role"
 
   policy = "${data.aws_iam_policy_document.contact-form.json}"
 }
